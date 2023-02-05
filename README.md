@@ -1,3 +1,4 @@
+
 ### Getting Started (In Rust directory)
 ---------------
 **Env**
@@ -48,6 +49,8 @@ then
     s = into function if n will step over function
     x <address>= show value hex in memory use address from xinfo
     x /d <address> = decimal
-    c = continue
+    c = continue to next break point
+    ctx source = view currnt break point debug
     
     
+
