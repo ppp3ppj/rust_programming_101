@@ -2,7 +2,15 @@
 #![allow(unused_variables)]
 
 use std::collections::HashMap;
-use basic_rust::Person;
+//use basic_rust::Person;
+//use basic_rust::person::Person;
+//use basic_rust::customers::Customer;
+
+use basic_rust::{
+    person::Person,
+    customers::Customer,
+    speaking::Speaking
+};
 
 fn main() {
 
@@ -58,12 +66,14 @@ fn main() {
     //}
 
     // can set name of loop
+    /*
     'label1: loop {
         'label2: loop {
             break 'label1;
             continue 'label2;
         }
     }
+    */
 
     // .. = 0 - 9
     // ..= = 0-10
@@ -120,10 +130,73 @@ fn main() {
     */
     let new_access = Person::new("pp".to_string(), 18);
     new_access.hello();
+    new_access.speak();
 
+    //Trait same interface
+
+    // Enum
+    let x = Colors::Red;
+    let mut color = "";
+    match x {
+        Colors::Red => color = "red",
+        Colors::Green => { color = "green" },
+        _ => color = "blue"
+    };
+
+    let color = match x {
+        Colors::Red => "red",
+        Colors::Green => "green",
+        _ => "blue"
+    };
+
+    let x = checkGrade(100);
+    match x {
+        GradeResult::Error(e) => println!("{}", e),
+        GradeResult::Value(g) => println!("{}", g),
+
+    };
+
+    let x = checkGrade2(-1);
+    match x {
+        None => println!("error!"),
+        Some(v) => println!("{}", v),
+    }
+
+    let x = checkGrade3(-1);
+    match x {
+        Err(e) => println!("{}", e),
+        Ok(v) => println!("{}", v),
+    }
+
+    let x = checkGrade3(100);
+
+    if x.is_err() {
+        return;
+    }
+    let y = x.unwrap(); // not recommend please check err real use guard pattern befor unwarp()
+
+    if let Ok(v) = x {
+       println!("{}", v);
+    }
+
+    // Best
+    let x = checkGrade3(100);
+    let y = match x {
+        Err(e) => {
+            println!("{}", e);
+            return;
+        },
+        Ok(v) => v,
+    };
+
+    // Closures is mean lamda or anonymus fn
 
     //println!("{}", p.name);
-
+    let x = |a:i32, b:i32| a + b;
+    let y = x(10, 20);
+    // function type
+    let y = cal(10, 20, x);
+    let y = cal(10, 20, |a,b| a - b);
 
 
     //let mut n1 = 1;
@@ -150,6 +223,52 @@ fn main() {
     ex4_1();
     println!();
     println!();
+}
+
+fn cal<F: Fn(i32, i32) -> i32>(a: i32, b: i32, f:F) -> i32 {
+    f(a, b)
+}
+
+// short hand
+fn cal2<F>(a: i32, b: i32, f:F) -> i32
+where
+        F: Fn(i32, i32) -> i32,
+    {
+        f(a,b)
+    }
+
+
+fn checkGrade(score: i32) -> GradeResult {
+    if score < 0 || score > 100 {
+       return GradeResult::Error("Score is not correct".to_string());
+    }
+    return GradeResult::Value("A".to_string());
+}
+
+fn checkGrade2(score: i32) -> Option<String>{
+   if score < 0 || score > 100 {
+      return None;
+   }
+    //return Some("A".to_string());
+   Some("A".to_string())
+}
+
+fn checkGrade3(score: i32) -> Result<String, String> {
+    if score < 0 || score > 100 {
+        return Err("Score is not correct".to_string());
+    }
+    Ok("A".to_string())
+}
+
+enum GradeResult {
+   Value(String),
+   Error(String),
+}
+
+enum Colors where{
+    Red,
+    Green,
+    Blue
 }
 
 
